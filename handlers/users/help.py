@@ -6,4 +6,7 @@ from aiogram.dispatcher.filters.builtin import CommandHelp
 @dp.message_handler(CommandHelp())
 async def cmd_help(message: types.Message):
     # Command '/help' handler
-    await message.answer(text='Template help message')
+    text = f'I will show you your <b>telegram user ID</b>, <b>current chat ID</b> and <b>ID</b> of forwarded message.'\
+           f'\n<i>User telegram ID</i>, <i>Chat ID</i> - unique identifier of telegram objects such as ' \
+           f'User, Bot, Chat etc.\n Read more: https://core.telegram.org/bots/api#user'
+    await message.answer(text=text)
