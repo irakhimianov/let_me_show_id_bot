@@ -15,7 +15,7 @@ async def get_users_list(call: types.CallbackQuery, session: AsyncSession, state
     paginator = users_keyboard(users=users)
     args, kwargs = paginator.paginator_handler()
     dp.register_callback_query_handler(*args, **kwargs)
-    text = '👤 Список пользователей'
+    text = '👤 Users list'
     await edit_message(
         bot=bot,
         text=text,
@@ -29,7 +29,7 @@ async def get_users_list(call: types.CallbackQuery, session: AsyncSession, state
 async def get_user(call: types.CallbackQuery, session: AsyncSession, state: FSMContext):
     user_id = int(call.data.split('_')[-1])
     user = await requests.get_user(user_id=user_id, session=session)
-    text = f'<u><b>Пользователь:</b></u> <a href="tg://user?id={user.user_id}">{user.user_id}</a>\n'
+    text = f'<u><b>User:</b></u> <a href="tg://user?id={user.user_id}">{user.user_id}</a>\n'
     await edit_message(
         bot=bot,
         text=text,

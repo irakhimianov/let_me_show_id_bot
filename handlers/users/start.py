@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from loader import dp
 
 
-@dp.message_handler(CommandStart())
+@dp.message_handler(CommandStart(), chat_type='private')
 async def cmd_start(message: types.Message):
     # Command '/start' handler
     user_id = message.from_user.id

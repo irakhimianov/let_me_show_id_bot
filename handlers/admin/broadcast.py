@@ -19,7 +19,7 @@ async def broadcast(call: types.CallbackQuery, state: FSMContext):
     :return:
     """
     data = await state.get_data()
-    text = 'Введите текст для рассылки:'
+    text = '💥 Send your text for broadcast:'
     await bot.edit_message_text(
         chat_id=data['chat_id'],
         message_id=data['last_message_id'],
@@ -53,4 +53,4 @@ async def broadcast_text(message: types.Message, session: AsyncSession, state: F
             await requests.update_user(user_id=user.user_id, is_active=True, session=session)
             logging.error(f'{user.user_id} - {e}')
     await state.finish()
-    await message.answer(text='Рассылка осуществлена', reply_markup=admin_keyboard)
+    await message.answer(text='✅ Broadcast completed', reply_markup=admin_keyboard)

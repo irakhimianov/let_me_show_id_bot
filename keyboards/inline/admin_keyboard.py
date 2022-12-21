@@ -2,8 +2,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 buttons = [
-    InlineKeyboardButton(text='📢 Рассылка', callback_data='broadcast'),
-    InlineKeyboardButton(text='👤 Пользователи', callback_data='users')
+    InlineKeyboardButton(text='📢 Broadcast', callback_data='broadcast'),
+    InlineKeyboardButton(text='👤 Users', callback_data='users')
 ]
 
 admin_keyboard = InlineKeyboardMarkup(row_width=1)

@@ -12,9 +12,12 @@ SUPPORTED_TYPES = (
 )
 
 
-@dp.message_handler(content_types=SUPPORTED_TYPES)
-@dp.message_handler(IsReplyFilter, content_types=SUPPORTED_TYPES)
-@dp.message_handler(ForwardedMessageFilter, content_types=SUPPORTED_TYPES)
+@dp.message_handler(chat_type='private')
+@dp.message_handler(IsReplyFilter, chat_type='private')
+@dp.message_handler(ForwardedMessageFilter, chat_type='private')
+@dp.message_handler(chat_type='private', content_types=SUPPORTED_TYPES)
+@dp.message_handler(IsReplyFilter, chat_type='private', content_types=SUPPORTED_TYPES)
+@dp.message_handler(ForwardedMessageFilter, chat_type='private', content_types=SUPPORTED_TYPES)
 async def content_message(message: types.Message):
     user_id = message.from_user.id
     chat_id = message.chat.id
@@ -22,24 +25,15 @@ async def content_message(message: types.Message):
     forwarded_from = ''
     if message.forward_from:
         forwarded_from = message.forward_from.id
-        forwarded_from = f'♻ Forwarded from <b>User ID</b>: <code>{forwarded_from}</code>\n'
+        chat_type = 'Bot' if message.forward_from.is_bot else 'User'
+        forwarded_from = f'♻ Forwarded from <b>{chat_type} ID</b>: <code>{forwarded_from}</code>\n'
     elif message.forward_from_chat:
         forwarded_from = message.forward_from_chat.id
-        forwarded_from = f'♻ Forwarded from <b>Chat ID</b>: <code>{forwarded_from}</code>\n'
+        forwarded_from = f'♻ Forwarded from <b>{message.forward_from_chat.type.capitalize()} ' \
+                         f'Chat ID</b>: <code>{forwarded_from}</code>\n'
 
     text = f'👤 Your <b>User ID</b>: <code>{user_id}</code>\n' \
            f'👉 Current <b>Chat ID</b>: <code>{chat_id}</code>\n' \
            f'{forwarded_from}' \
            f'{content_id}'
-    await message.answer(text=text)
-
-
-@dp.message_handler()
-@dp.message_handler(IsReplyFilter)
-@dp.message_handler(ForwardedMessageFilter)
-async def any_message(message: types.Message):
-    user_id = message.from_user.id
-    chat_id = message.chat.id
-    text = f'👤 Your <b>User ID</b>: <code>{user_id}</code>\n' \
-           f'👉 Current <b>Chat ID</b>: <code>{chat_id}</code>\n'
     await message.answer(text=text)

@@ -7,10 +7,10 @@ from keyboards.inline import admin_keyboard
 from utils import edit_message
 
 
-@dp.message_handler(IsAdmin(), commands='admin')
+@dp.message_handler(IsAdmin(), commands='admin', chat_type='private')
 async def admin(message: types.Message, state: FSMContext):
     last_message = await message.answer(
-        text='Админ-меню',
+        text='👮‍ Admin menu',
         reply_markup=admin_keyboard
     )
     async with state.proxy() as data:
@@ -18,9 +18,9 @@ async def admin(message: types.Message, state: FSMContext):
         data['last_message_id'] = last_message.message_id
 
 
-@dp.callback_query_handler(IsAdmin(), text='admin')
+@dp.callback_query_handler(IsAdmin(), text='admin', chat_type='private')
 async def call_admin(call: types.CallbackQuery, state: FSMContext):
-    text = 'Админ-меню'
+    text = '👮‍ Admin menu'
     await edit_message(
         bot=bot,
         text=text,

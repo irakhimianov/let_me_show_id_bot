@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.types import BotCommandScopeChat, BotCommandScopeDefault
+from aiogram.types import BotCommandScopeChat, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats
 from aiogram import Dispatcher
 
 from data.config import ADMIN
@@ -10,6 +10,7 @@ async def set_default_commands(dp: Dispatcher) -> None:
     await dp.bot.set_my_commands(
         [
             types.BotCommand('start', 'Start bot'),
+            types.BotCommand('id', 'Let me show you id'),
             types.BotCommand('help', 'Help'),
             types.BotCommand('admin', 'Admin menu')
         ],
@@ -19,7 +20,16 @@ async def set_default_commands(dp: Dispatcher) -> None:
     await dp.bot.set_my_commands(
         [
             types.BotCommand('start', 'Start bot'),
+            types.BotCommand('id', 'Let me show you id'),
             types.BotCommand('help', 'Help'),
         ],
-        scope=BotCommandScopeDefault()
+        scope=BotCommandScopeAllPrivateChats()
     )
+
+    await dp.bot.set_my_commands(
+        [
+            types.BotCommand('id', 'Let me show you id'),
+        ],
+        scope=BotCommandScopeAllGroupChats()
+    )
+
