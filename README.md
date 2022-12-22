@@ -20,13 +20,12 @@
 
 ## Installation
 
-1. #### Clone the Template:
+1. #### Clone the repository:
 
    * `git clone https://github.com/rkjar/let_me_show_id_bot`
-2. #### Install Requirements
+2. #### Install requirements
 
-   * `pip install -r requirements.txt`
-   * `poetry install`
+   * `pip install -r requirements.txt` OR`poetry install`
 3. #### Change the configuration:
 
    * Copy `env_example` and `config_example.py`
@@ -35,3 +34,21 @@
 4. #### Run bot:
 
    * `python main.py`
+
+
+## Commands
+
+```
+/start          Start the bot
+/id             Let me show you id
+/help           Help
+/admin          Admin menu (available for admins only)
+```
+
+## Usage
+
+<div align="center">
+
+![screenshot](images/usage.gif)
+
+</div>
