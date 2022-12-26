@@ -9,6 +9,7 @@ from filters import IsAdmin
 from keyboards.inline import cancel_keyboard, admin_keyboard
 from loader import dp, bot
 from states import BroadcastState
+from utils import edit_message
 
 
 @dp.callback_query_handler(IsAdmin(), text='broadcast')
@@ -18,14 +19,17 @@ async def broadcast(call: types.CallbackQuery, state: FSMContext):
     :param call:
     :return:
     """
-    data = await state.get_data()
     text = '💥 Send your text for broadcast:'
-    await bot.edit_message_text(
-        chat_id=data['chat_id'],
-        message_id=data['last_message_id'],
+    chat_id, last_message_id = await edit_message(
+        bot=bot,
         text=text,
+        call=call,
         reply_markup=cancel_keyboard
     )
+    bot['state'] = state
+    async with state.proxy() as data:
+        data['chat_id'] = chat_id
+        data['last_message_id'] = last_message_id
     await BroadcastState.text.set()
     await bot.answer_callback_query(callback_query_id=call.id)
 
