@@ -2,25 +2,25 @@ import logging
 
 from aiogram import types, Bot
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.exceptions import (MessageNotModified, MessageToEditNotFound, ChatNotFound,
-                                      MessageIdentifierNotSpecified, ChatIdIsEmpty)
 
 
 async def edit_message(
         *,
         bot: Bot,
         text: str,
-        state: FSMContext = None,
-        chat_id: int = None,
-        last_message_id: int = None,
+        call: types.CallbackQuery = None,
         reply_markup: types.InlineKeyboardMarkup = None,
         web_preview: bool = False
 ):
-    if state and (chat_id is last_message_id is None):
-        data = await state.get_data()
-        chat_id = data.get('chat_id')
-        last_message_id = data.get('last_message_id')
     try:
+        state: FSMContext = bot.get('state')
+        if state:
+            data = await state.get_data()
+            chat_id = data.get('chat_id')
+            last_message_id = data.get('last_message_id')
+        else:
+            chat_id = call.message.chat.id
+            last_message_id = call.message.message_id
         await bot.edit_message_text(
             text=text,
             chat_id=chat_id,
@@ -28,16 +28,14 @@ async def edit_message(
             reply_markup=reply_markup,
             disable_web_page_preview=web_preview
         )
-    except MessageNotModified as e:
+    except Exception as e:
         logging.error(f'{__name__} - {e}')
-    except (MessageIdentifierNotSpecified, MessageToEditNotFound, ChatNotFound, ChatIdIsEmpty) as e:
-        logging.error(f'{__name__} - {e}')
+        chat_id = call.message.chat.id
         last_message = await bot.send_message(
             chat_id=chat_id,
             text=text,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
-        if state:
-            async with state.proxy() as data:
-                data['chat_id'] = chat_id
-                data['last_message_id'] = last_message.message_id
+        last_message_id = last_message.message_id
+    finally:
+        return chat_id, last_message_id
