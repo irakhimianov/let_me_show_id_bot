@@ -1,10 +1,12 @@
 import logging
 from aiogram.utils.exceptions import (Unauthorized, InvalidQueryID, TelegramAPIError,
                                       CantDemoteChatCreator, MessageNotModified, MessageToDeleteNotFound,
-                                      MessageTextIsEmpty, RetryAfter,
-                                      CantParseEntities, MessageCantBeDeleted)
+                                      MessageTextIsEmpty, RetryAfter, MessageCantBeEdited,
+                                      CantParseEntities, MessageCantBeDeleted, MessageToEditNotFound,
+                                      ChatNotFound, ChatIdIsEmpty)
 
 from loader import dp
+
 
 @dp.errors_handler()
 async def errors_handler(update, exception):
@@ -26,6 +28,14 @@ async def errors_handler(update, exception):
 
     if isinstance(exception, MessageCantBeDeleted):
         logging.exception('Message cant be deleted')
+        return True
+
+    if isinstance(exception, MessageCantBeEdited):
+        logging.exception('Message cant be edited')
+        return True
+
+    if isinstance(exception, MessageToEditNotFound):
+        logging.exception('Message to edit not found')
         return True
 
     if isinstance(exception, MessageToDeleteNotFound):
@@ -55,5 +65,14 @@ async def errors_handler(update, exception):
     if isinstance(exception, CantParseEntities):
         logging.exception(f'CantParseEntities: {exception} \nUpdate: {update}')
         return True
+
+    if isinstance(exception, ChatNotFound):
+        logging.exception(f'Chat not found: {exception} \nUpdate: {update}')
+        return True
+
+    if isinstance(exception, ChatIdIsEmpty):
+        logging.exception(f'Chat id is empty: {exception} \nUpdate: {update}')
+        return True
+
 
     logging.exception(f'Update: {update} \n{exception}')
